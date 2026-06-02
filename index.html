@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#0f766e"/>
+<title>Revisa DH — Quiz de Desenvolvimento Humano</title>
+<style>
+:root {
+  --bg:#07111f;
+  --bg2:#0b2f35;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --surface-3:#eef2f7;
+  --text:#0f172a;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --primary:#0f766e;
+  --primary-2:#14b8a6;
+  --primary-soft:#ccfbf1;
+  --accent:#f59e0b;
+  --success:#16a34a;
+  --success-soft:#dcfce7;
+  --danger:#dc2626;
+  --danger-soft:#fee2e2;
+  --purple:#6d28d9;
+  --shadow:0 22px 70px rgba(2,6,23,.26);
+  --radius:28px;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  min-height:100vh;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  color:#fff;
+  background:
+    radial-gradient(circle at 8% 6%, rgba(20,184,166,.35), transparent 29%),
+    radial-gradient(circle at 92% 8%, rgba(245,158,11,.22), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(109,40,217,.22), transparent 35%),
+    linear-gradient(135deg, var(--bg), var(--bg2));
+}
+button, select { font:inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+.app-shell { max-width:1220px; margin:0 auto; padding:28px; }
+.hero {
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:20px;
+  align-items:stretch;
+  margin-bottom:18px;
+}
+.hero-card {
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:34px;
+  padding:34px;
+  background:linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(14px);
+}
+.hero-card:after {
+  content:"";
+  position:absolute;
+  width:300px;
+  height:300px;
+  right:-120px;
+  top:-120px;
+  border-radius:999px;
+  background:rgba(20,184,166,.24);
+}
+.eyebrow {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 12px;
+  border-radius:999px;
+  background:rgba(204,251,241,.14);
+  border:1px solid rgba(204,251,241,.25);
+  color:#ccfbf1;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.11em;
+  font-weight:900;
+}
+.hero h1 {
+  position:relative;
+  margin:18px 0 12px;
+  font-size:clamp(38px,5vw,72px);
+  line-height:.95;
+  letter-spacing:-.06em;
+  font-weight:950;
+  z-index:1;
+}
+.hero p {
+  position:relative;
+  margin:0;
+  color:#d1fae5;
+  font-size:18px;
+  line-height:1.55;
+  max-width:760px;
+  z-index:1;
+}
+.hero-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; position:relative; z-index:1; }
+.btn {
+  border:0;
+  border-radius:16px;
+  padding:12px 16px;
+  font-weight:950;
+  cursor:pointer;
+  background:#e2e8f0;
+  color:#0f172a;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:.18s ease;
+}
+.btn:hover { transform:translateY(-1px); filter:brightness(.98); }
+.btn:active { transform:translateY(0); }
+.btn.primary { background:linear-gradient(135deg, var(--primary), var(--primary-2)); color:white; }
+.btn.dark { background:#0f172a; color:white; }
+.btn.ghost { background:rgba(255,255,255,.12); color:white; border:1px solid rgba(255,255,255,.18); }
+.btn.success { background:var(--success); color:white; }
+.btn.danger { background:var(--danger); color:white; }
+.btn.accent { background:var(--accent); color:#111827; }
+.btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+.summary-card {
+  border-radius:34px;
+  padding:24px;
+  background:rgba(255,255,255,.96);
+  color:var(--text);
+  box-shadow:var(--shadow);
+}
+.summary-card h2 { margin:0 0 12px; font-size:22px; letter-spacing:-.03em; }
+.summary-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.summary-item {
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:14px;
+}
+.summary-item span { display:block; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.09em; font-weight:950; }
+.summary-item strong { display:block; margin-top:4px; color:var(--primary); font-size:30px; line-height:1; }
+.rounds {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+  margin:18px 0;
+}
+.round-card {
+  background:rgba(255,255,255,.96);
+  color:var(--text);
+  border-radius:26px;
+  padding:18px;
+  border:1px solid rgba(226,232,240,.8);
+  box-shadow:0 14px 34px rgba(2,6,23,.18);
+  cursor:pointer;
+  transition:.18s ease;
+}
+.round-card:hover { transform:translateY(-3px); box-shadow:0 22px 46px rgba(2,6,23,.24); }
+.round-card.active { border-color:#5eead4; box-shadow:0 0 0 4px rgba(20,184,166,.18), 0 22px 46px rgba(2,6,23,.24); }
+.round-card .tag {
+  display:inline-flex;
+  background:#ecfeff;
+  color:#0f766e;
+  border:1px solid #99f6e4;
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:12px;
+  font-weight:950;
+  margin-bottom:12px;
+}
+.round-card h3 { margin:0 0 8px; font-size:20px; letter-spacing:-.03em; }
+.round-card p { margin:0 0 14px; color:var(--muted); font-size:14px; line-height:1.4; }
+.round-footer { display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-weight:900; font-size:13px; }
+.quiz-layout {
+  display:grid;
+  grid-template-columns:310px 1fr;
+  gap:16px;
+  align-items:start;
+}
+.side-panel {
+  position:sticky;
+  top:18px;
+  background:rgba(255,255,255,.96);
+  color:var(--text);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+.label {
+  margin:12px 0 8px;
+  color:var(--muted);
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-weight:950;
+}
+select {
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  font-weight:850;
+  background:white;
+  color:var(--text);
+  margin-bottom:8px;
+}
+.progress {
+  height:12px;
+  background:#e2e8f0;
+  border-radius:999px;
+  overflow:hidden;
+  margin:14px 0 8px;
+}
+.progress span {
+  display:block;
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg, var(--primary), var(--primary-2));
+  transition:.35s ease;
+}
+.mini-text { color:var(--muted); font-size:13px; line-height:1.4; }
+.metrics {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+}
+.metric {
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--surface-2);
+  padding:12px;
+  text-align:center;
+}
+.metric span {
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-weight:950;
+}
+.metric strong {
+  display:block;
+  font-size:28px;
+  color:var(--primary);
+  margin-top:4px;
+}
+.quiz-card {
+  min-height:680px;
+  background:rgba(255,255,255,.98);
+  color:var(--text);
+  border-radius:var(--radius);
+  padding:26px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+}
+.quiz-top {
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:18px;
+}
+.pill {
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:8px 12px;
+  font-weight:950;
+  font-size:13px;
+}
+.pill.primary { background:#ecfeff; color:#0f766e; border:1px solid #99f6e4; }
+.pill.orange { background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; }
+.quiz-top h2 { margin:8px 0 4px; font-size:24px; letter-spacing:-.035em; }
+.quiz-top p { margin:0; color:var(--muted); line-height:1.4; }
+.question-area {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.question {
+  margin:0 0 22px;
+  font-size:clamp(28px,4.2vw,54px);
+  line-height:1.08;
+  letter-spacing:-.045em;
+  font-weight:950;
+}
+.options { display:grid; gap:12px; }
+.option {
+  display:flex;
+  gap:13px;
+  align-items:flex-start;
+  border:2px solid var(--line);
+  background:var(--surface-2);
+  border-radius:20px;
+  padding:16px;
+  cursor:pointer;
+  transition:.16s ease;
+  font-size:19px;
+  font-weight:820;
+}
+.option:hover { transform:translateY(-1px); border-color:#5eead4; }
+.option.selected { background:#ecfeff; border-color:var(--primary); box-shadow:0 0 0 4px rgba(20,184,166,.14); }
+.option.correct { background:var(--success-soft); border-color:var(--success); }
+.option.wrong { background:var(--danger-soft); border-color:var(--danger); }
+.option.disabled { pointer-events:none; }
+.letter {
+  flex:0 0 auto;
+  width:39px;
+  height:39px;
+  border-radius:13px;
+  background:var(--primary);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:950;
+}
+.option.correct .letter { background:var(--success); }
+.option.wrong .letter { background:var(--danger); }
+.feedback {
+  display:none;
+  margin-top:18px;
+  border-radius:22px;
+  padding:18px;
+  border:2px solid;
+}
+.feedback.show { display:block; animation:pop .22s ease; }
+.feedback.correct { background:#ecfdf5; border-color:#86efac; }
+.feedback.wrong { background:#fff1f2; border-color:#fda4af; }
+.feedback h3 { margin:0 0 8px; font-size:24px; letter-spacing:-.025em; }
+.feedback.correct h3 { color:#166534; }
+.feedback.wrong h3 { color:#9f1239; }
+.answer { font-size:20px; font-weight:950; color:#14532d; }
+.feedback.wrong .answer { color:#9f1239; }
+.expl { color:#1f2937; line-height:1.5; margin-top:8px; font-size:17px; }
+.quiz-footer {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:18px;
+}
+.result-screen {
+  display:none;
+  flex:1;
+  flex-direction:column;
+  justify-content:center;
+}
+.result-screen.show { display:flex; }
+.result-title {
+  margin:0;
+  font-size:clamp(36px,5vw,68px);
+  line-height:.95;
+  letter-spacing:-.06em;
+  font-weight:950;
+}
+.result-subtitle { margin:10px 0 18px; color:var(--muted); font-size:18px; }
+.big-metrics {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:18px;
+}
+.big-metric {
+  border:1px solid var(--line);
+  background:var(--surface-2);
+  border-radius:22px;
+  padding:18px;
+  text-align:center;
+}
+.big-metric span {
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:12px;
+  font-weight:950;
+}
+.big-metric strong {
+  display:block;
+  font-size:40px;
+  color:var(--primary);
+  margin-top:6px;
+}
+.review-list {
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+  max-height:320px;
+  overflow:auto;
+  padding-right:4px;
+}
+.review-item {
+  border:1px solid var(--line);
+  background:var(--surface-2);
+  border-radius:18px;
+  padding:13px;
+}
+.review-item.good { border-left:8px solid var(--success); }
+.review-item.bad { border-left:8px solid var(--danger); }
+.review-item strong { display:block; margin-bottom:5px; }
+.review-item .meta { margin-top:6px; color:var(--muted); font-size:13px; line-height:1.35; }
+.modal {
+  position:fixed;
+  inset:0;
+  z-index:30;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(2,6,23,.72);
+}
+.modal.show { display:flex; }
+.modal-content {
+  width:min(880px,96vw);
+  max-height:90vh;
+  overflow:auto;
+  background:white;
+  color:var(--text);
+  border-radius:28px;
+  padding:26px;
+  box-shadow:var(--shadow);
+}
+.modal-content h2 { margin:0 0 10px; font-size:30px; letter-spacing:-.04em; }
+.modal-content p { color:#334155; line-height:1.55; }
+.steps {
+  display:grid;
+  gap:10px;
+  margin:14px 0;
+}
+.step {
+  padding:14px;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:18px;
+}
+.step strong { color:var(--primary); }
+kbd {
+  background:#e2e8f0;
+  padding:2px 7px;
+  border-radius:8px;
+  font-weight:950;
+}
+@keyframes pop {
+  from { transform:scale(.98); opacity:.4; }
+  to { transform:scale(1); opacity:1; }
+}
+@media(max-width:980px) {
+  .hero, .quiz-layout { grid-template-columns:1fr; }
+  .rounds { grid-template-columns:1fr; }
+  .side-panel { position:relative; top:auto; }
+  .hero-card, .summary-card, .quiz-card, .side-panel { border-radius:24px; }
+  .quiz-top, .quiz-footer, .header { flex-direction:column; align-items:stretch; }
+  .badge { white-space:normal; }
+}
+@media(max-width:620px) {
+  .app-shell { padding:16px; }
+  .hero-card { padding:24px; }
+  .summary-grid, .metrics, .big-metrics { grid-template-columns:1fr 1fr; }
+  .question { font-size:30px; }
+  .option { font-size:16px; padding:13px; }
+  .btn { width:100%; }
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="header">
+    <div class="brand">
+      <span class="eyebrow">Revisão interativa</span>
+    </div>
+    <div class="badge">Desenvolvimento Humano: Adulto e Idoso</div>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-card">
+      <span class="eyebrow">Jogo educacional</span>
+      <h1>Revisa DH</h1>
+      <p>Quiz estático para os alunos revisarem os principais conteúdos da disciplina, com feedback imediato, som de acerto/erro e placar por rodada.</p>
+      <div class="hero-actions">
+        <button class="btn primary" onclick="scrollToQuiz()">Começar revisão</button>
+        <button class="btn ghost" onclick="openShareHelp()">Como disponibilizar aos alunos</button>
+      </div>
+    </div>
+    <aside class="summary-card">
+      <h2>Resumo do jogo</h2>
+      <div class="summary-grid">
+        <div class="summary-item"><span>Rodadas</span><strong id="sumRounds">3</strong></div>
+        <div class="summary-item"><span>Questões</span><strong id="sumQuestions">0</strong></div>
+        <div class="summary-item"><span>Formato</span><strong>Web</strong></div>
+        <div class="summary-item"><span>Dados</span><strong>Local</strong></div>
+      </div>
+      <p class="mini-text" style="margin-top:12px">Não exige login, internet ou banco de dados depois de baixado. Para compartilhar em casa, basta hospedar o arquivo HTML.</p>
+    </aside>
+  </section>
+
+  <section class="rounds" id="roundCards"></section>
+
+  <section class="quiz-layout" id="quiz">
+    <aside class="side-panel">
+      <div class="label">Rodada</div>
+      <select id="roundSelect"></select>
+      <select id="questionSelect"></select>
+
+      <div class="progress"><span id="progressBar"></span></div>
+      <div class="mini-text" id="progressText"></div>
+
+      <div class="label">Desempenho da rodada</div>
+      <div class="metrics">
+        <div class="metric"><span>Acertos</span><strong id="rightScore">0</strong></div>
+        <div class="metric"><span>Erros</span><strong id="wrongScore">0</strong></div>
+        <div class="metric"><span>Respondidas</span><strong id="answeredScore">0</strong></div>
+        <div class="metric"><span>Aproveit.</span><strong id="percentScore">0</strong></div>
+      </div>
+
+      <div class="label">Ações</div>
+      <div class="controls">
+        <button class="btn primary" onclick="restartRound()">Reiniciar rodada</button>
+        <button class="btn dark" onclick="showRoundResults()">Resultado</button>
+        <button class="btn" onclick="toggleSound()" id="soundBtn">🔊 Som ligado</button>
+      </div>
+
+      <p class="mini-text" style="margin-top:12px">Versão estática: as respostas não são salvas ao fechar a página.</p>
+    </aside>
+
+    <main class="quiz-card">
+      <section id="quizScreen">
+        <div class="quiz-top">
+          <div>
+            <span class="pill primary" id="roundName"></span>
+            <h2 id="roundTitle"></h2>
+            <p id="roundDesc"></p>
+          </div>
+          <span class="pill orange" id="typeName"></span>
+        </div>
+
+        <div class="question-area">
+          <h2 class="question" id="questionText"></h2>
+          <div class="options" id="options"></div>
+
+          <div class="feedback" id="feedbackBox">
+            <h3 id="feedbackTitle"></h3>
+            <div class="answer" id="answerText"></div>
+            <div class="expl" id="explanationText"></div>
+          </div>
+        </div>
+
+        <div class="quiz-footer">
+          <button class="btn" onclick="prevQuestion()">← Anterior</button>
+          <div class="controls">
+            <button class="btn accent" onclick="checkAnswer()" id="checkBtn">Verificar resposta</button>
+            <button class="btn primary" onclick="nextQuestion()" id="nextBtn">Próxima →</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="result-screen">
+        <h2 class="result-title">Resultado da rodada</h2>
+        <div class="result-subtitle" id="resultSubtitle"></div>
+
+        <div class="big-metrics">
+          <div class="big-metric"><span>Questões</span><strong id="resTotal"></strong></div>
+          <div class="big-metric"><span>Acertos</span><strong id="resRight"></strong></div>
+          <div class="big-metric"><span>Erros</span><strong id="resWrong"></strong></div>
+          <div class="big-metric"><span>Aproveitamento</span><strong id="resPct"></strong></div>
+        </div>
+
+        <div class="controls">
+          <button class="btn primary" onclick="backToQuiz()">Voltar ao quiz</button>
+          <button class="btn accent" onclick="restartRound()">Refazer rodada</button>
+          <button class="btn dark" onclick="nextRound()">Próxima rodada</button>
+        </div>
+
+        <div class="review-list" id="reviewList"></div>
+      </section>
+    </main>
+  </section>
+</div>
+
+<div class="modal" id="shareModal">
+  <div class="modal-content">
+    <h2>Como disponibilizar para os alunos</h2>
+    <p>Este jogo é um arquivo único <strong>HTML</strong>. Para os alunos abrirem em casa, hospede o arquivo e envie o link.</p>
+    <div class="steps">
+      <div class="step"><strong>Opção mais simples:</strong> envie o arquivo HTML pelo AVA, Google Classroom, WhatsApp ou e-mail. O aluno baixa e abre no navegador.</div>
+      <div class="step"><strong>Opção com link:</strong> renomeie o arquivo para <strong>index.html</strong> e publique em GitHub Pages, Netlify ou Vercel. Depois envie apenas o link.</div>
+      <div class="step"><strong>Opção institucional:</strong> peça ao suporte da instituição para colocar o arquivo em uma pasta pública do site ou do AVA.</div>
+    </div>
+    <p><strong>Observação:</strong> como é estático, não registra notas dos alunos. Ele serve como revisão autônoma.</p>
+    <div class="controls"><button class="btn primary" onclick="closeShareHelp()">Fechar</button></div>
+  </div>
+</div>
+
+<script>
+const DATA = {"title": "Quiz de Revisão — Desenvolvimento Humano: Adulto e Idoso", "subtitle": "Rodadas 1, 2 e 3 • Conteúdo ampliado com base nas aulas enviadas", "rounds": [{"name": "Rodada 1 — Aquecimento", "type": "Múltipla escolha", "description": "Questões objetivas para revisar conceitos, fases da vida adulta, envelhecimento e Terapia Ocupacional.", "questions": [{"q": "O desenvolvimento humano pode ser entendido como:", "options": ["Um processo restrito à infância e adolescência.", "Um estudo científico dos processos de mudança e estabilidade ao longo da vida.", "Uma sequência exclusivamente biológica determinada pela genética.", "Um fenômeno que termina quando o indivíduo atinge independência financeira."], "answer": "B", "explanation": "O desenvolvimento humano envolve processos de mudança e estabilidade do nascimento à morte, considerando aspectos físicos, cognitivos, emocionais, sociais e culturais."}, {"q": "Quais são os três domínios principais do desenvolvimento humano trabalhados nas aulas?", "options": ["Físico, cognitivo e psicossocial.", "Orgânico, patológico e terapêutico.", "Motor, respiratório e cardiovascular.", "Individual, familiar e institucional."], "answer": "A", "explanation": "Os domínios físico, cognitivo e psicossocial são interdependentes e precisam ser analisados em conjunto."}, {"q": "Para a Terapia Ocupacional, estudar desenvolvimento humano é importante porque:", "options": ["Permite definir condutas apenas pela idade cronológica.", "Substitui a necessidade de avaliação funcional.", "Ajuda a compreender capacidades, limitações, papéis, contextos e necessidades de intervenção.", "Permite diagnosticar doenças sem avaliação clínica."], "answer": "C", "explanation": "O conhecimento do ciclo de vida auxilia na compreensão do desempenho ocupacional e na escolha de intervenções adequadas ao contexto."}, {"q": "No início da vida adulta, geralmente entre 20 e 40 anos, é esperado observar:", "options": ["Declínio global intenso e inevitável da saúde.", "Pico do desenvolvimento físico e sensorial, com influência crescente dos hábitos de vida.", "Ausência de escolhas vocacionais e relacionais.", "Redução completa da capacidade de aprendizagem."], "answer": "B", "explanation": "A vida adulta jovem costuma envolver auge biológico, escolhas educacionais/vocacionais, relacionamentos e construção de papéis."}, {"q": "Sobre os hábitos de saúde no adulto jovem, é correto afirmar:", "options": ["São pouco relevantes, pois a saúde futura depende apenas da genética.", "Tendem a influenciar a saúde na meia-idade e no envelhecimento.", "Só importam após os 65 anos.", "Não interferem no desempenho ocupacional."], "answer": "B", "explanation": "Hábitos como sono, alimentação, atividade física e uso de substâncias podem impactar o desempenho ocupacional e a saúde futura."}, {"q": "Nas aulas, a genética foi apresentada como:", "options": ["Destino inevitável para todas as doenças.", "Elemento irrelevante para saúde do adulto.", "Fator de suscetibilidade que interage com ambiente e estilo de vida.", "Único determinante do envelhecimento."], "answer": "C", "explanation": "A genética pode indicar predisposição, mas não determina sozinha os desfechos em saúde."}, {"q": "O pensamento pós-formal no adulto está relacionado a:", "options": ["Pensamento rígido, literal e incapaz de lidar com contradições.", "Pensamento flexível, contextual, relativista e aplicado a problemas reais.", "Perda da capacidade de raciocínio abstrato.", "Memorização automática sem tomada de decisão."], "answer": "B", "explanation": "O pensamento adulto tende a considerar contexto, ambiguidade, experiência e demandas reais da vida."}, {"q": "Na vida adulta psicossocial, as trajetórias atuais são consideradas mais diversificadas porque:", "options": ["Todos seguem a mesma sequência: estudo, trabalho, casamento e filhos.", "Tarefas tradicionais podem ser adiadas, com maior experimentação de papéis, relações e empregos.", "A vida adulta deixou de envolver responsabilidades.", "A independência ocorre sempre antes dos 20 anos."], "answer": "B", "explanation": "As aulas destacam que o adulto jovem contemporâneo pode viver trajetórias menos lineares e mais exploratórias."}, {"q": "A vida adulta intermediária é geralmente compreendida como o período entre:", "options": ["20 e 40 anos.", "30 e 50 anos.", "40 e 65 anos.", "65 anos em diante."], "answer": "C", "explanation": "A vida adulta intermediária ou meia-idade envolve domínio, crescimento, reavaliação e transição de papéis."}, {"q": "O termo “geração sanduíche” se refere a:", "options": ["Adultos que alternam entre vários empregos.", "Adultos que cuidam simultaneamente dos filhos e dos pais idosos.", "Idosos que vivem sozinhos.", "Jovens que adiam a entrada no mercado de trabalho."], "answer": "B", "explanation": "Na meia-idade, é comum a sobrecarga relacionada a responsabilidades multigeracionais."}, {"q": "Na vida adulta intermediária, a presbiopia pode impactar principalmente:", "options": ["A capacidade de compreender sons agudos.", "A leitura, o uso de telas e atividades próximas.", "A memória semântica.", "A marcha em terrenos irregulares exclusivamente."], "answer": "B", "explanation": "A presbiopia dificulta o foco em objetos próximos e pode interferir em leitura, trabalho e AIVDs."}, {"q": "A presbiacusia é caracterizada por:", "options": ["Perda gradual da audição para sons de alta frequência.", "Perda completa e súbita da visão central.", "Dificuldade de foco em objetos próximos.", "Redução da força muscular nos membros inferiores."], "answer": "A", "explanation": "A presbiacusia pode dificultar a compreensão da fala, especialmente em ambientes ruidosos."}, {"q": "Sobre inteligência fluida e cristalizada na meia-idade, é correto afirmar:", "options": ["A fluida tende a crescer indefinidamente e a cristalizada desaparece.", "A fluida envolve resolver problemas novos; a cristalizada envolve conhecimento acumulado.", "Ambas são exclusivamente motoras.", "A cristalizada depende apenas de reflexos rápidos."], "answer": "B", "explanation": "A inteligência fluida pode sofrer declínio gradual, enquanto a cristalizada tende a se manter ou crescer com a experiência."}, {"q": "A vida adulta tardia geralmente é considerada a partir de:", "options": ["40 anos.", "50 anos.", "60 anos.", "65 anos."], "answer": "D", "explanation": "As aulas situam a vida adulta tardia a partir dos 65 anos, com mudanças físicas, cognitivas e psicossociais relevantes."}, {"q": "O envelhecimento primário é melhor definido como:", "options": ["Declínio causado por doenças evitáveis e maus hábitos.", "Processo gradual e inevitável de deterioração física associado ao envelhecimento.", "Conjunto de alterações exclusivamente sociais.", "Processo sempre reversível por intervenção terapêutica."], "answer": "B", "explanation": "O envelhecimento primário independe das ações do indivíduo e ocorre de forma gradual ao longo da vida."}, {"q": "O envelhecimento secundário resulta principalmente de:", "options": ["Doenças, abusos, maus hábitos e fatores modificáveis.", "Apenas da idade cronológica.", "Um relógio genético imutável.", "Memória procedimental preservada."], "answer": "A", "explanation": "O envelhecimento secundário pode ser prevenido ou minimizado por promoção de saúde, prevenção e intervenção adequada."}, {"q": "Senescência significa:", "options": ["Doença mental obrigatória da velhice.", "Período da vida marcado por declínios no funcionamento físico associados ao envelhecimento.", "Perda completa da autonomia.", "Condição exclusiva de pessoas hospitalizadas."], "answer": "B", "explanation": "A senescência refere-se a declínios naturais associados ao envelhecimento, que variam entre indivíduos."}, {"q": "Na velhice, qual tipo de memória tende a sofrer maior deterioração?", "options": ["Memória episódica.", "Memória semântica.", "Memória procedimental.", "Vocabulário consolidado."], "answer": "A", "explanation": "A memória episódica, ligada a eventos específicos no tempo e espaço, tende a ser mais afetada pelo envelhecimento."}, {"q": "Na velhice, qual tipo de memória tende a ser mais resistente ao envelhecimento?", "options": ["Memória episódica de eventos recentes.", "Memória de trabalho sob dupla tarefa.", "Memória procedimental, ligada a habilidades e hábitos aprendidos.", "Memória de nomes recém-aprendidos."], "answer": "C", "explanation": "Habilidades automatizadas, como andar de bicicleta ou tocar um instrumento, costumam ser mais preservadas."}, {"q": "Na atuação da Terapia Ocupacional com idosos, um objetivo central é:", "options": ["Tratar apenas a doença, sem considerar participação social.", "Maximizar funcionalidade, independência, segurança e participação social.", "Evitar qualquer uso de tecnologia assistiva.", "Reduzir todas as atividades para prevenir esforço."], "answer": "B", "explanation": "A TO busca manter autonomia, qualidade de vida e participação pelo maior tempo possível."}, {"q": "Qual medida é coerente para adaptação ambiental na velhice?", "options": ["Reduzir a iluminação para evitar estímulos.", "Manter tapetes soltos para conforto.", "Melhorar iluminação, remover obstáculos, usar barras de apoio e recursos de memória.", "Evitar qualquer rotina estruturada."], "answer": "C", "explanation": "Adaptações ambientais reduzem riscos, favorecem autonomia e apoiam o desempenho ocupacional."}]}, {"name": "Rodada 2 — Verdadeiro, Falso ou Depende?", "type": "Julgamento crítico", "description": "O aluno deve julgar a afirmação e conferir a justificativa. O foco é raciocínio, não apenas memorização.", "questions": [{"q": "O desenvolvimento humano é um processo contínuo e dinâmico que envolve mudanças físicas, cognitivas, emocionais e sociais.", "answer": "Verdadeiro", "explanation": "Essa é uma ideia central das aulas de introdução ao desenvolvimento humano."}, {"q": "Os domínios físico, cognitivo e psicossocial devem ser estudados separadamente, pois não interferem uns nos outros.", "answer": "Falso", "explanation": "Os domínios são interconectados. Uma alteração física pode impactar cognição, relações, papéis e participação."}, {"q": "A idade cronológica é suficiente para definir o nível de desempenho ocupacional de uma pessoa.", "answer": "Falso", "explanation": "É necessário considerar contexto, história ocupacional, saúde, ambiente, cultura, rede de apoio e papéis sociais."}, {"q": "A entrada na vida adulta pode ser definida de forma exata e universal para todos os indivíduos.", "answer": "Falso", "explanation": "As aulas destacam que não é possível demarcar com precisão única o início da adultez, pois há fatores sociais, culturais e pessoais."}, {"q": "No adulto jovem, a condição física costuma estar no auge, mas escolhas de estilo de vida influenciam a saúde futura.", "answer": "Verdadeiro", "explanation": "Hábitos estabelecidos nessa fase tendem a persistir e impactar a meia-idade e a velhice."}, {"q": "A genética indica suscetibilidade, mas não necessariamente destino.", "answer": "Verdadeiro", "explanation": "Predisposições genéticas interagem com comportamento, ambiente e contexto."}, {"q": "O pensamento pós-formal é menos útil para a vida adulta porque se distancia dos problemas reais.", "answer": "Falso", "explanation": "O pensamento pós-formal é justamente mais contextual, flexível e aplicado a situações reais."}, {"q": "As trajetórias do adulto jovem contemporâneo são sempre lineares e previsíveis.", "answer": "Falso", "explanation": "As aulas ressaltam trajetórias mais diversificadas, com adiamento de tarefas tradicionais e experimentação."}, {"q": "Permanecer na casa dos pais na vida adulta jovem significa obrigatoriamente imaturidade.", "answer": "Falso", "explanation": "Pode ocorrer por razões econômicas, culturais, educacionais ou de reorganização dos papéis familiares."}, {"q": "A vida adulta intermediária é uma fase apenas de perdas e declínio.", "answer": "Falso", "explanation": "Ela envolve reavaliação e mudanças, mas também domínio, crescimento, influência social e uso de conhecimentos acumulados."}, {"q": "A geração sanduíche pode gerar sobrecarga ocupacional.", "answer": "Verdadeiro", "explanation": "Cuidar simultaneamente de filhos e pais idosos pode comprometer autocuidado, trabalho, lazer e saúde."}, {"q": "A presbiopia pode interferir em atividades instrumentais da vida diária, como leitura, preparo de medicamentos e uso de telas.", "answer": "Verdadeiro", "explanation": "A dificuldade de foco próximo exige adaptações como iluminação, contraste, óculos e organização ambiental."}, {"q": "A presbiacusia pode favorecer isolamento social e fadiga cognitiva.", "answer": "Verdadeiro", "explanation": "A dificuldade de compreender fala em ruído aumenta o esforço auditivo e pode reduzir participação social."}, {"q": "A inteligência cristalizada tende a estar relacionada ao conhecimento acumulado e às habilidades adquiridas ao longo da vida.", "answer": "Verdadeiro", "explanation": "Ela pode se manter ou crescer na vida adulta intermediária, servindo como recurso compensatório."}, {"q": "Todo declínio observado na velhice é inevitável.", "answer": "Depende", "explanation": "O envelhecimento primário é inevitável, mas o secundário pode ser prevenido ou controlado por hábitos, ambiente e intervenção."}, {"q": "A senescência ocorre da mesma forma e na mesma idade para todas as pessoas.", "answer": "Falso", "explanation": "A senescência varia conforme fatores genéticos, ambientais, sociais e estilo de vida."}, {"q": "As teorias biológicas do envelhecimento podem envolver tanto programação genética quanto danos acumulados ao longo do tempo.", "answer": "Verdadeiro", "explanation": "As aulas apontam teorias de programação genética e teorias de taxas variáveis."}, {"q": "Catarata, degeneração macular e glaucoma têm o mesmo efeito visual.", "answer": "Falso", "explanation": "Catarata causa visão turva; degeneração macular afeta visão central; glaucoma pode causar perda da visão periférica."}, {"q": "Na velhice, a atuação da Terapia Ocupacional deve focar exclusivamente na doença.", "answer": "Falso", "explanation": "O foco deve incluir funcionalidade, independência, participação social, segurança, rotina e qualidade de vida."}, {"q": "Tecnologias assistivas, auxílios de memória, alarmes e calendários podem apoiar a autonomia de idosos.", "answer": "Verdadeiro", "explanation": "Esses recursos podem compensar limitações e favorecer organização, segurança e participação."}, {"q": "A prevenção de quedas envolve apenas orientar o idoso a andar menos.", "answer": "Falso", "explanation": "A prevenção inclui treino de força e equilíbrio, avaliação ambiental, remoção de riscos, barras de apoio e promoção de mobilidade segura."}]}, {"name": "Rodada 3 — Quem sou eu?", "type": "Pistas", "description": "Leia a pista e tente identificar o conceito, fase ou fenômeno antes de revelar a resposta.", "questions": [{"q": "Sou o estudo científico dos processos de mudança e estabilidade que ocorrem nas pessoas ao longo de toda a vida.", "answer": "Desenvolvimento humano", "explanation": "Inclui dimensões biológicas, psicológicas, sociais e culturais."}, {"q": "Sou o domínio que envolve crescimento do corpo e cérebro, capacidades sensoriais, habilidades motoras, saúde e nutrição.", "answer": "Desenvolvimento físico", "explanation": "É um dos três domínios principais do desenvolvimento humano."}, {"q": "Sou o domínio que envolve aprendizagem, atenção, memória, linguagem, pensamento e raciocínio.", "answer": "Desenvolvimento cognitivo", "explanation": "Abrange funções mentais e processos de aquisição, uso e reorganização do conhecimento."}, {"q": "Sou o domínio que envolve emoções, personalidade, relações interpessoais, papéis sociais, autoestima e identidade.", "answer": "Desenvolvimento psicossocial", "explanation": "É essencial para compreender participação, vínculos e desempenho ocupacional."}, {"q": "Sou a fase em que a condição física atinge o auge, escolhas educacionais e vocacionais são feitas e relacionamentos íntimos ganham importância.", "answer": "Adulto jovem / vida adulta emergente", "explanation": "Geralmente situada entre 20 e 40 anos, com transições importantes de autonomia e papéis."}, {"q": "Sou uma fase de experimentação, em que tarefas tradicionais como sair de casa, casar e ter filhos podem ser adiadas.", "answer": "Adultez emergente / adulto jovem contemporâneo", "explanation": "As trajetórias de vida adulta são cada vez mais diversificadas."}, {"q": "Sou o período entre 40 e 65 anos marcado por domínio, crescimento, reavaliação, mudanças sensoriais e responsabilidades multigeracionais.", "answer": "Vida adulta intermediária / meia-idade", "explanation": "É uma fase de transição de papéis e reorganização ocupacional."}, {"q": "Sou a dificuldade progressiva de focar objetos próximos, comum na meia-idade e com impacto em leitura e uso de telas.", "answer": "Presbiopia", "explanation": "Pode exigir óculos, aumento de fonte, contraste e iluminação adequada."}, {"q": "Sou a perda gradual da audição para sons de alta frequência, dificultando conversas em ambientes ruidosos.", "answer": "Presbiacusia", "explanation": "Pode levar a isolamento social, fadiga cognitiva e necessidade de estratégias comunicacionais."}, {"q": "Sou a capacidade de resolver problemas novos por raciocínio abstrato; posso declinar gradualmente com a idade.", "answer": "Inteligência fluida", "explanation": "Pode ser apoiada por divisão de tarefas em etapas e uso de auxílios externos."}, {"q": "Sou o conhecimento acumulado e as habilidades adquiridas ao longo da vida; posso permanecer estável ou crescer na meia-idade.", "answer": "Inteligência cristalizada", "explanation": "Serve como recurso para compensar declínios e favorecer adesão a intervenções."}, {"q": "Sou o processo gradual e inevitável de deterioração física que começa cedo e continua ao longo dos anos.", "answer": "Envelhecimento primário", "explanation": "Independe diretamente das ações do indivíduo."}, {"q": "Sou o envelhecimento relacionado a doenças, abusos e maus hábitos físicos, frequentemente evitável ou controlável.", "answer": "Envelhecimento secundário", "explanation": "Pode ser minimizado por prevenção, estilo de vida saudável e intervenção terapêutica."}, {"q": "Sou o período da vida marcado por declínios no funcionamento físico associados ao envelhecimento, variando entre pessoas.", "answer": "Senescência", "explanation": "Não ocorre da mesma forma nem na mesma idade para todos."}, {"q": "Sou uma teoria que entende o envelhecimento como resultado de um relógio evolutivo inato nos genes.", "answer": "Teoria de programação genética", "explanation": "Uma das teorias biológicas apresentadas para explicar o envelhecimento."}, {"q": "Sou uma teoria que entende o envelhecimento como resultado de danos acumulados, influenciados pelo ambiente e estilo de vida.", "answer": "Teoria de taxas variáveis", "explanation": "Enfatiza processos aleatórios e diferenças individuais."}, {"q": "Sou a memória de eventos específicos vinculados a tempo e lugar, sendo uma das mais afetadas na velhice.", "answer": "Memória episódica", "explanation": "Exemplo: lembrar onde estacionou o carro ou o que comeu no café da manhã."}, {"q": "Sou a memória de conhecimentos gerais, fatos, significados e vocabulário; posso permanecer estável ou melhorar com a idade.", "answer": "Memória semântica", "explanation": "Relaciona-se ao conhecimento acumulado."}, {"q": "Sou a memória de habilidades motoras e hábitos aprendidos, como andar de bicicleta ou tocar piano.", "answer": "Memória procedimental", "explanation": "Costuma ser resistente ao envelhecimento."}]}]};
+
+let state = {
+  round:0,
+  question:0,
+  selected:null,
+  checked:false,
+  sound:true,
+  attempts:{},
+  roundStart:Date.now()
+};
+
+function normalize(txt) {
+  return String(txt || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "")
+    .trim();
+}
+
+function canonicalAnswer(q) {
+  return String(q.answer || "").trim().split("/").pop().trim();
+}
+
+function questionId(r,q) { return `r${r}q${q}`; }
+function currentRound() { return DATA.rounds[state.round]; }
+function currentQuestion() { return currentRound().questions[state.question]; }
+
+function init() {
+  document.getElementById("sumRounds").textContent = DATA.rounds.length;
+  document.getElementById("sumQuestions").textContent = DATA.rounds.reduce((s,r)=>s+r.questions.length,0);
+
+  renderRoundCards();
+  renderRoundSelect();
+  renderQuestionSelect();
+  render();
+}
+
+function renderRoundCards() {
+  const el = document.getElementById("roundCards");
+  el.innerHTML = DATA.rounds.map((r,i)=>`
+    <article class="round-card ${i===state.round ? "active" : ""}" onclick="goToRound(${i})">
+      <span class="tag">${escapeHtml(r.type)}</span>
+      <h3>${escapeHtml(r.name)}</h3>
+      <p>${escapeHtml(r.description)}</p>
+      <div class="round-footer"><span>${r.questions.length} questões</span><span>Iniciar →</span></div>
+    </article>
+  `).join("");
+}
+
+function goToRound(i) {
+  state.round = i;
+  state.question = 0;
+  state.selected = null;
+  state.checked = false;
+  state.roundStart = Date.now();
+  renderRoundSelect();
+  renderQuestionSelect();
+  render();
+  scrollToQuiz();
+}
+
+function scrollToQuiz() {
+  document.getElementById("quiz").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function renderRoundSelect() {
+  const el = document.getElementById("roundSelect");
+  el.innerHTML = DATA.rounds.map((r,i)=>`<option value="${i}">${r.name} (${r.questions.length})</option>`).join("");
+  el.onchange = e => {
+    goToRound(Number(e.target.value));
+  };
+}
+
+function renderQuestionSelect() {
+  const el = document.getElementById("questionSelect");
+  el.innerHTML = currentRound().questions.map((q,i)=>`<option value="${i}">Questão ${i+1}</option>`).join("");
+  el.onchange = e => {
+    state.question = Number(e.target.value);
+    state.selected = null;
+    state.checked = false;
+    render();
+  };
+}
+
+function seededShuffle(arr, seed) {
+  const a = [...arr];
+  let s = seed + 1;
+  for (let i = a.length - 1; i > 0; i--) {
+    s = (s * 9301 + 49297) % 233280;
+    const j = Math.floor((s / 233280) * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getOptionsForQuestion(roundIndex, questionIndex) {
+  const round = DATA.rounds[roundIndex];
+  const q = round.questions[questionIndex];
+
+  if (q.options && q.options.length) {
+    return q.options.map((text, index) => ({
+      text,
+      value:String.fromCharCode(65 + index),
+      isCorrect:normalize(String.fromCharCode(65 + index)) === normalize(canonicalAnswer(q))
+    }));
+  }
+
+  if (round.name.toLowerCase().includes("verdadeiro")) {
+    return ["Verdadeiro", "Falso", "Depende"].map(text => ({
+      text,
+      value:text,
+      isCorrect:normalize(text) === normalize(canonicalAnswer(q))
+    }));
+  }
+
+  const correct = canonicalAnswer(q);
+  let pool = round.questions
+    .map(item => canonicalAnswer(item))
+    .filter(ans => normalize(ans) && normalize(ans) !== normalize(correct));
+
+  pool = [...new Set(pool)];
+  const distractors = seededShuffle(pool, roundIndex * 1000 + questionIndex).slice(0,3);
+  const final = seededShuffle([correct, ...distractors], roundIndex * 5000 + questionIndex + 9);
+
+  return final.map(text => ({
+    text,
+    value:text,
+    isCorrect:normalize(text) === normalize(correct)
+  }));
+}
+
+function render() {
+  document.getElementById("quizScreen").style.display = "block";
+  document.getElementById("resultScreen").classList.remove("show");
+
+  renderRoundCards();
+
+  const round = currentRound();
+  const q = currentQuestion();
+  const id = questionId(state.round, state.question);
+  const attempt = state.attempts[id];
+
+  if (attempt) {
+    state.selected = attempt.selected;
+    state.checked = true;
+  }
+
+  document.getElementById("roundSelect").value = state.round;
+  document.getElementById("questionSelect").value = state.question;
+  document.getElementById("roundName").textContent = `Rodada ${state.round + 1}`;
+  document.getElementById("roundTitle").textContent = round.name;
+  document.getElementById("roundDesc").textContent = round.description;
+  document.getElementById("typeName").textContent = round.type;
+  document.getElementById("questionText").textContent = q.q;
+
+  const options = getOptionsForQuestion(state.round, state.question);
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  document.getElementById("options").innerHTML = options.map((opt,i)=> {
+    let cls = "option";
+    if (state.selected === opt.value) cls += " selected";
+    if (state.checked) {
+      cls += " disabled";
+      if (opt.isCorrect) cls += " correct";
+      else if (state.selected === opt.value) cls += " wrong";
+    }
+    return `<div class="${cls}" onclick="selectOption('${escapeJs(opt.value)}')">
+      <span class="letter">${letters[i] || i+1}</span>
+      <span>${escapeHtml(opt.text)}</span>
+    </div>`;
+  }).join("");
+
+  document.getElementById("checkBtn").disabled = state.checked || !state.selected;
+  document.getElementById("nextBtn").textContent = state.question === round.questions.length - 1 ? "Ver resultado →" : "Próxima →";
+
+  renderFeedback();
+  updateProgress();
+  updateStats();
+}
+
+function selectOption(value) {
+  if (state.checked) return;
+  state.selected = value;
+  render();
+}
+
+function checkAnswer() {
+  if (!state.selected || state.checked) return;
+
+  const q = currentQuestion();
+  const options = getOptionsForQuestion(state.round, state.question);
+  const selected = options.find(o => o.value === state.selected);
+  const correct = !!(selected && selected.isCorrect);
+
+  state.checked = true;
+  state.attempts[questionId(state.round, state.question)] = {
+    selected:state.selected,
+    correct,
+    correctAnswer:canonicalAnswer(q),
+    question:q.q
+  };
+
+  playSound(correct);
+  render();
+
+  if (isRoundComplete()) {
+    setTimeout(showRoundResults, 950);
+  }
+}
+
+function renderFeedback() {
+  const box = document.getElementById("feedbackBox");
+  const q = currentQuestion();
+  const attempt = state.attempts[questionId(state.round, state.question)];
+
+  if (!attempt) {
+    box.className = "feedback";
+    box.style.display = "none";
+    return;
+  }
+
+  box.style.display = "block";
+  box.className = "feedback show " + (attempt.correct ? "correct" : "wrong");
+  document.getElementById("feedbackTitle").textContent = attempt.correct ? "Resposta correta!" : "Resposta incorreta.";
+  document.getElementById("answerText").textContent = "Resposta esperada: " + canonicalAnswer(q);
+  document.getElementById("explanationText").textContent = q.explanation || "";
+}
+
+function nextQuestion() {
+  if (state.question === currentRound().questions.length - 1) {
+    showRoundResults();
+    return;
+  }
+  state.question++;
+  state.selected = null;
+  state.checked = false;
+  render();
+}
+
+function prevQuestion() {
+  if (state.question > 0) {
+    state.question--;
+    state.selected = null;
+    state.checked = false;
+    render();
+  }
+}
+
+function nextRound() {
+  if (state.round < DATA.rounds.length - 1) {
+    goToRound(state.round + 1);
+  } else {
+    backToQuiz();
+  }
+}
+
+function restartRound() {
+  const total = currentRound().questions.length;
+  for (let i=0; i<total; i++) delete state.attempts[questionId(state.round, i)];
+  state.question = 0;
+  state.selected = null;
+  state.checked = false;
+  state.roundStart = Date.now();
+  render();
+}
+
+function getRoundMetrics() {
+  const round = currentRound();
+  const attempts = round.questions.map((_,i)=>state.attempts[questionId(state.round,i)]).filter(Boolean);
+  const right = attempts.filter(a=>a.correct).length;
+  const wrong = attempts.filter(a=>!a.correct).length;
+  const total = round.questions.length;
+  const pct = attempts.length ? Math.round((right / attempts.length) * 100) : 0;
+  return {total, answered:attempts.length, right, wrong, pct};
+}
+
+function updateProgress() {
+  const m = getRoundMetrics();
+  const pct = (m.answered / m.total) * 100;
+  document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressText").textContent = `${m.answered} de ${m.total} questões respondidas nesta rodada`;
+}
+
+function updateStats() {
+  const m = getRoundMetrics();
+  document.getElementById("rightScore").textContent = m.right;
+  document.getElementById("wrongScore").textContent = m.wrong;
+  document.getElementById("answeredScore").textContent = m.answered;
+  document.getElementById("percentScore").textContent = m.pct + "%";
+}
+
+function isRoundComplete() {
+  const m = getRoundMetrics();
+  return m.answered === m.total;
+}
+
+function showRoundResults() {
+  const m = getRoundMetrics();
+  document.getElementById("quizScreen").style.display = "none";
+  document.getElementById("resultScreen").classList.add("show");
+  document.getElementById("resultSubtitle").textContent = currentRound().name + " • " + currentRound().type;
+
+  document.getElementById("resTotal").textContent = m.total;
+  document.getElementById("resRight").textContent = m.right;
+  document.getElementById("resWrong").textContent = m.wrong;
+  document.getElementById("resPct").textContent = m.pct + "%";
+
+  document.getElementById("reviewList").innerHTML = currentRound().questions.map((q,i)=> {
+    const a = state.attempts[questionId(state.round,i)];
+    const cls = a ? (a.correct ? "good" : "bad") : "bad";
+    const status = a ? (a.correct ? "Correta" : "Incorreta") : "Não respondida";
+    const selected = a ? a.selected : "—";
+    return `<div class="review-item ${cls}">
+      <strong>Questão ${i+1} — ${status}</strong>
+      <div>${escapeHtml(q.q)}</div>
+      <div class="meta">Sua resposta: ${escapeHtml(selected)} • Resposta esperada: ${escapeHtml(canonicalAnswer(q))}</div>
+    </div>`;
+  }).join("");
+}
+
+function backToQuiz() {
+  document.getElementById("quizScreen").style.display = "block";
+  document.getElementById("resultScreen").classList.remove("show");
+  render();
+}
+
+function toggleSound() {
+  state.sound = !state.sound;
+  document.getElementById("soundBtn").textContent = state.sound ? "🔊 Som ligado" : "🔇 Som desligado";
+}
+
+function playSound(correct) {
+  if (!state.sound) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const gain = ctx.createGain();
+    gain.connect(ctx.destination);
+    gain.gain.value = 0.065;
+    const notes = correct ? [523.25, 659.25, 783.99] : [220, 174.61];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      osc.type = correct ? "sine" : "triangle";
+      osc.frequency.value = freq;
+      osc.connect(gain);
+      const start = ctx.currentTime + idx * 0.12;
+      osc.start(start);
+      osc.stop(start + 0.11);
+    });
+    setTimeout(()=>ctx.close(), 700);
+  } catch(e) {}
+}
+
+function openShareHelp() {
+  document.getElementById("shareModal").classList.add("show");
+}
+function closeShareHelp() {
+  document.getElementById("shareModal").classList.remove("show");
+}
+
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function escapeJs(str) {
+  return String(str ?? "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "SELECT") return;
+  if (e.key === "ArrowRight") nextQuestion();
+  if (e.key === "ArrowLeft") prevQuestion();
+  if (e.key === "Enter") checkAnswer();
+});
+
+init();
+</script>
+</body>
+</html>
